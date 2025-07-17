@@ -1,42 +1,56 @@
-import { useState } from 'react';
-import './Login.scss';
+import { useNavigate } from "react-router"
+import "./Login.scss"
 
-function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+import { useState } from "react"
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Login attempt:', { email, password });
-  };
+export default function Login () {
 
-  return (
-    <div>
-      <h2>KIrish</h2>
-      <p>Hisob malumotlarini kiriting</p>
-      <form onSubmit={handleSubmit}>
-        <div className="form-field">
-          <label htmlFor="email">Email</label>
-          <input
-            type="text"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+    const [username, setUsername] = useState("emilys")
+    const [password, setPassword] = useState("emilyspass")
+
+    const navigate = useNavigate()
+
+    const onSubmit = (e) => {
+        e.preventDefault()
+
+        if (username && password) {
+            fetch(`https://dummyjson.com/auth/login`, {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            }).then(res => res.json())
+            .then(data => {
+                navigate("/")
+                localStorage.setItem("accessToken", data.accessToken)
+                console.log(data)
+            })
+        }
+    }
+
+    return (
+        <div className="loginPage">
+            <div className="loginContent">
+                <h2>Kirish </h2>
+                <p>Ma'lumotlarni kiriting </p>
+                <form id="form" onSubmit={onSubmit}>
+                    <div className="form-field">
+                        <div className="label">Username</div>
+                        <input onChange={(e) => {
+                            setUsername(e.target.value)
+                        }} value={username} type="text" placeholder="Enter an username..."/>
+                    </div>
+                    <div className="form-field">
+                        <div className="label">Password</div>
+                        <input value={password} onChange={(e) => {
+                            setPassword(e.target.value)
+                        }} type="password" placeholder="Enter a password..."/>
+                    </div>
+                    <button className="btn">Kirish </button>
+                </form>
+            </div>
         </div>
-        <div className="form-field">
-          <label htmlFor="password">Parol</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit" className="btn">Kirish</button>
-      </form>
-    </div>
-  );
+    )
 }
-
-export default Login;

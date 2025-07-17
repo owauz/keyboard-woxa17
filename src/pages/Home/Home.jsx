@@ -1,11 +1,18 @@
-import './Home.scss'; // Assuming SCSS file for styling
+
+import "./Home.scss";
+import Header from "../Header/Header";
+import Search from "../Search/Search";
 
 function Home() {
-  return (
-    <div>
-      <h1>Welcome</h1>
+
+
+
+    return (
+    <div className="container">
+      <Header />
+      <Search/>
     </div>
-  );
+  )
 }
 
 export default Home;
